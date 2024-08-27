@@ -9,42 +9,20 @@ namespace ToDoList
 {
     internal class Task
     {
+        public int? id { get; set; }
+        public string TextBody { get; set; }
         public DateTime CreateDate { get; private set; }
         public DateTime? CompletedDate { get; private set; }
-        public string TextBody { get; set; }
+        public bool IsCompleted { get; set; }
 
-        private static List<Task> allTasks = new List<Task>();
 
-            public Task(string textBody)
-            {
-                CreateDate = DateTime.Now;
-                CompletedDate = null;      
-                TextBody = textBody;
-                allTasks.Add(this);
-        }
+        public Task() { }
 
-        public static List<Task> GetAllTasks()
+        public Task(string textBody,bool IsCompleted, DateTime CreateDate, DateTime? CompletedDate )
         {
-            return new List<Task>(allTasks);
+            CreateDate = DateTime.Now;
+            CompletedDate = null;      
+            TextBody = textBody;
         }
-
-        public static void ToggleCompleted(Task task) 
-        {
-            if (task.CompletedDate == null)
-            {
-                task.CompletedDate = DateTime.Now;
-            }
-            else
-            {
-                task.CompletedDate = null;
-            }
-        }
-
-        public static Task UpdateTextBody(Task task, string textBody) 
-        {
-            task.TextBody = textBody;
-            return task;
-        }
-
     }
 }

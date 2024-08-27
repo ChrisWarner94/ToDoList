@@ -3,27 +3,21 @@ using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Linq;
 using System.Text;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ToDoList
 {
     internal class UserInterface
     {
         
-        
-
-
-
-        public static void MenuManager()
+        public static int ReturnMenuSelection<T>(IEnumerable<T> menuToPrint)
         {
+           
             int keyPressCount = 0;
-            Task[] tasks = Task.GetAllTasks().ToArray();
-            string[] mainMenu = { "Add Task", "View Tasks", "Exit" };
-            string[] taskMenu = { "Change Completed Status", "Update Task", "Delete Task", "Return to Main Menu" };
-            PrintMenu(mainMenu, 0);
-
+            PrintMenu(menuToPrint, keyPressCount); 
             ConsoleKeyInfo keyPress = Console.ReadKey();
             while (keyPress.Key != ConsoleKey.Enter)
-            {
+            {  
                 switch (keyPress.Key)
                 {
                     case ConsoleKey.UpArrow:
@@ -32,48 +26,24 @@ namespace ToDoList
                             keyPressCount--;
                         }
                         Console.Clear();
-                        PrintMenu(mainMenu, keyPressCount);
+                        PrintMenu(menuToPrint, keyPressCount);
                         keyPress = Console.ReadKey(true);
                         break;
 
                     case ConsoleKey.DownArrow:
-                        if (keyPressCount < mainMenu.Length - 1)
+                        if (keyPressCount < menuToPrint.Count() - 1)
                         {
                             keyPressCount++;
                         }
                         Console.Clear();
-                        PrintMenu(mainMenu, keyPressCount);
+                        PrintMenu(menuToPrint, keyPressCount);
                         keyPress = Console.ReadKey(true);
                         break;
                 }
             }
 
-            if (keyPressCount == 0)
-            {
-                Console.Clear();
-                string taskToAdd = GetText("Enter the task you would like to add:");
-                Task newTask = new Task(taskToAdd);
-                Console.Clear();
-                PrintNotification($"Task Added: {newTask.TextBody}");
-                Thread.Sleep(1000);
-                Console.Clear();
-                MenuManager();
-            }
-            else if (keyPressCount == 1)
-            {
-                Console.Clear();
-                PrintNotification("Your Tasks");
-                tasks = Task.GetAllTasks().ToArray();
-                PrintMenu(tasks.Select(t => t.TextBody).ToArray(), 0);    
-                Console.WriteLine("Press any key to return to the main menu"); //insert here
-                Console.ReadKey();
-                Console.Clear();
-                MenuManager();
-            }
-            else if (keyPressCount == 2)
-            {
-                Environment.Exit(0);
-            }
+            Console.Clear();
+            return keyPressCount;
         }
 
 
@@ -105,6 +75,18 @@ namespace ToDoList
 
         }
 
+        public static void AddTask()
+        {
+            string taskToAdd = GetText("Enter the task you would like to add:");
+            Task newTask = new Task(taskToAdd, false, DateTime.Now, null);
+            SqliteDataAccess.SaveTask(newTask);
+            Console.Clear();
+            PrintNotification($"Task Added: {newTask.TextBody}");
+            Thread.Sleep(1000);
+            Console.Clear();
+            InterfaceRouting.MenuRoutes("MainMenu");
+        }
+
         private static void PrintNotification(string notification)
         {
             Console.BackgroundColor = ConsoleColor.Black;
@@ -119,18 +101,16 @@ namespace ToDoList
             Console.WriteLine(text);
         }
 
-        private static string GetText(string prompt)
+        public static string GetText(string prompt)
         {
-            Console.WriteLine(prompt);
+            PrintNotification(prompt);
             string toReturn = Console.ReadLine();
             if (String.IsNullOrEmpty(toReturn))
             {
-                Console.WriteLine("Please enter a valid task.");
+                CentreText("Please enter a valid task.");
                 GetText(prompt);
             }
-
             return toReturn;
-
         }
     }
 
