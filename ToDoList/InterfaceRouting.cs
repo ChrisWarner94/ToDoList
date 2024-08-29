@@ -34,7 +34,7 @@ namespace ToDoList
             }
             else if (requiredMenu == "TasksMenu")
             {
-                string[] taskMenu = { "view completed tasks", "view incomplete tasks" };
+                string[] taskMenu = { "view completed tasks", "view incomplete tasks", "return to main menu" };
                 int presscount = UserInterface.ReturnMenuSelection(taskMenu);
 
                 if (presscount == 0)
@@ -45,10 +45,15 @@ namespace ToDoList
                 {
                     MenuRoutes("IncompleteTasks");
                 }
+                else if (presscount == 2)
+                {
+                    MenuRoutes("MainMenu");
+                }
             }
             else if (requiredMenu == "CompletedTasks")
-            {   
+            {
                 List<Task> completedTasks = SqliteDataAccess.LoadCompletedTasks();
+                CheckListIsPopulated(completedTasks, "completed");
                 List<string> textBodies = ReturnTaskTextBody(completedTasks);
                 int presscount = UserInterface.ReturnMenuSelection(textBodies);
                 Task task = completedTasks[presscount];
@@ -58,15 +63,17 @@ namespace ToDoList
             else if (requiredMenu == "IncompleteTasks")
             {
                 List<Task> incompleteTasks = SqliteDataAccess.LoadIncompleteTasks();
+                CheckListIsPopulated(incompleteTasks, "incomplete");
                 List<string> textBodies = ReturnTaskTextBody(incompleteTasks);
                 int presscount = UserInterface.ReturnMenuSelection(textBodies);
                 Task task = incompleteTasks[presscount];
+                Console.WriteLine(textBodies.Count);
                 MenuRoutes(task);
 
             }
          }
 
-        //overload of menu
+        //overload of menu for task instance
         public static void MenuRoutes(Task task)
         {
             string[] taskInstanceMenu = { "Change completion status of task", "Change task", "Delete task" };
@@ -104,6 +111,19 @@ namespace ToDoList
             }
             return taskTextBody;
         }
+
+        private static void CheckListIsPopulated(List<Task> tasks, string listType)
+        {
+            if (tasks.Count == 0)
+            {
+                UserInterface.PrintNotification("You currently have no " + listType + " tasks");
+                Thread.Sleep(2000);
+                Console.Clear();
+                MenuRoutes("MainMenu");
+            }
+        }
     }
+
+   
 }
     

@@ -7,6 +7,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.SQLite;
 using Dapper;
+using System.Reflection.Metadata.Ecma335;
 
 namespace ToDoList
 {
@@ -17,31 +18,22 @@ namespace ToDoList
         {
             return ConfigurationManager.ConnectionStrings[id].ConnectionString;
         }
-      
-        public static List<Task> LoadCompletedTasks()
+
+        public static List<List<Task>> LoadCompletedTasks()
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
             {
                 var output = cnn.Query<Task>("select * from Task where IsCompleted = true", new DynamicParameters());
-                return output.ToList();
+                return SplitList(output.ToList(), 10);
             }
         }
 
-        public static List<Task> LoadIncompleteTasks()
+        public static List<List<Task>> LoadIncompleteTasks()
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
             {
                 var output = cnn.Query<Task>("select * from Task where IsCompleted = false", new DynamicParameters());
-                return output.ToList();
-            }
-        }
-
-        public static Task LoadTask(int id)
-        {
-            using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
-            {
-                Task task = cnn.QuerySingleOrDefault<Task>("select * from Task where Id = @Id", new { Id = id });
-                return task;
+                return SplitList(output.ToList(), 10);
             }
         }
 
@@ -70,6 +62,16 @@ namespace ToDoList
             {
                 cnn.Execute("delete from Task where Id = @Id", new { Id = task.id });
             }
+        }
+
+        private static List<List<Task>> SplitList(List<Task> tasks, int size)
+        {
+            var splitList = new List<List<Task>>();
+            for (int i = 0; i < tasks.Count; i += size)
+            {
+                splitList.Add(tasks.GetRange(i, Math.Min(size, tasks.Count - i)));
+            }
+            return splitList;
         }
 
 

@@ -87,7 +87,7 @@ namespace ToDoList
             InterfaceRouting.MenuRoutes("MainMenu");
         }
 
-        private static void PrintNotification(string notification)
+        public static void PrintNotification(string notification)
         {
             Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.Green;
