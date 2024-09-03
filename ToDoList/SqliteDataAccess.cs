@@ -24,7 +24,7 @@ namespace ToDoList
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
             {
                 var output = cnn.Query<Task>("select * from Task where IsCompleted = true", new DynamicParameters());
-                return SplitList(output.ToList(), 10);
+                return SplitList(output.ToList());
             }
         }
 
@@ -33,7 +33,7 @@ namespace ToDoList
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
             {
                 var output = cnn.Query<Task>("select * from Task where IsCompleted = false", new DynamicParameters());
-                return SplitList(output.ToList(), 10);
+                return SplitList(output.ToList());
             }
         }
 
@@ -64,8 +64,9 @@ namespace ToDoList
             }
         }
 
-        private static List<List<Task>> SplitList(List<Task> tasks, int size)
+        private static List<List<Task>> SplitList(List<Task> tasks)
         {
+            int size = 10;
             var splitList = new List<List<Task>>();
             for (int i = 0; i < tasks.Count; i += size)
             {

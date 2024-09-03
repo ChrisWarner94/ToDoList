@@ -52,21 +52,21 @@ namespace ToDoList
             }
             else if (requiredMenu == "CompletedTasks")
             {
-                List<Task> completedTasks = SqliteDataAccess.LoadCompletedTasks();
+                List<List<Task>> completedTasks = SqliteDataAccess.LoadCompletedTasks();
                 CheckListIsPopulated(completedTasks, "completed");
-                List<string> textBodies = ReturnTaskTextBody(completedTasks);
+                List<List<string>> textBodies = ReturnTaskTextBody(completedTasks);
                 int presscount = UserInterface.ReturnMenuSelection(textBodies);
-                Task task = completedTasks[presscount];
+                Task task = completedTasks[presscount][1];// needs to be setup to receive horizontal presscount
                 MenuRoutes(task);
 
             }
             else if (requiredMenu == "IncompleteTasks")
             {
-                List<Task> incompleteTasks = SqliteDataAccess.LoadIncompleteTasks();
+                List<List<Task>> incompleteTasks = SqliteDataAccess.LoadIncompleteTasks();
                 CheckListIsPopulated(incompleteTasks, "incomplete");
-                List<string> textBodies = ReturnTaskTextBody(incompleteTasks);
+                List<List<string>> textBodies = ReturnTaskTextBody(incompleteTasks);
                 int presscount = UserInterface.ReturnMenuSelection(textBodies);
-                Task task = incompleteTasks[presscount];
+                Task task = incompleteTasks[presscount][1];// needs to be setup to receive horizontal presscount
                 Console.WriteLine(textBodies.Count);
                 MenuRoutes(task);
 
@@ -102,17 +102,25 @@ namespace ToDoList
             }
         }
 
-        private static List<string> ReturnTaskTextBody(List<Task> tasks)
+        private static List<List<string>> ReturnTaskTextBody(List<List<Task>> tasks)
         {
-            List<string> taskTextBody = new List<string>();
-            foreach (var task in tasks)
-            {
-                taskTextBody.Add(task.TextBody);
-            }
-            return taskTextBody;
-        }
+            List<List<string>> taskTextBodyLists = new List<List<string>>();
 
-        private static void CheckListIsPopulated(List<Task> tasks, string listType)
+            foreach (List<Task> taskList in tasks)
+            {
+                List<string> taskTextBodies = new List<string>();
+                foreach (Task task in taskList)
+                {
+                    taskTextBodies.Add(task.TextBody);
+                }
+
+                taskTextBodyLists.Add(taskTextBodies);
+
+            }
+
+            return taskTextBodyLists;
+        }
+        private static void CheckListIsPopulated(List<List<Task>> tasks, string listType)
         {
             if (tasks.Count == 0)
             {
