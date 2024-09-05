@@ -13,37 +13,100 @@ namespace ToDoList
         public static int ReturnMenuSelection<T>(IEnumerable<T> menuToPrint)
         {
            
-            int keyPressCount = 0;
-            PrintMenu(menuToPrint, keyPressCount); 
+            int verticalPressCount = 0;
+            PrintMenu(menuToPrint, verticalPressCount); 
             ConsoleKeyInfo keyPress = Console.ReadKey();
             while (keyPress.Key != ConsoleKey.Enter)
-            {  
+            {
+                    switch (keyPress.Key)
+                    {
+                        case ConsoleKey.UpArrow:
+                            if (verticalPressCount > 0)
+                            {
+                                verticalPressCount--;
+                            }
+                            Console.Clear();
+                            PrintMenu(menuToPrint, verticalPressCount);
+                            keyPress = Console.ReadKey(true);
+                            break;
+
+                        case ConsoleKey.DownArrow:
+                            if (verticalPressCount < menuToPrint.Count() - 1)
+                            {
+                                verticalPressCount++;
+                            }
+                            Console.Clear();
+                            PrintMenu(menuToPrint, verticalPressCount);
+                            keyPress = Console.ReadKey(true);
+                            break;
+                    }
+            }
+
+            Console.Clear();
+            return verticalPressCount;
+        }
+
+        public static int[] ReturnTaskSelection(List<List<string>> taskLists)
+        {
+            int verticalPressCount = 0;
+            int horizontalPressCount = 0;
+
+            List<string> listToPrint = taskLists[horizontalPressCount];
+            PrintMenu(listToPrint, verticalPressCount);
+
+
+            ConsoleKeyInfo keyPress = Console.ReadKey();
+            while (keyPress.Key != ConsoleKey.Enter)
+            {
                 switch (keyPress.Key)
                 {
                     case ConsoleKey.UpArrow:
-                        if (keyPressCount > 0)
+                        if (verticalPressCount > 0)
                         {
-                            keyPressCount--;
+                            verticalPressCount--;
                         }
                         Console.Clear();
-                        PrintMenu(menuToPrint, keyPressCount);
+                        PrintMenu(listToPrint, verticalPressCount);
                         keyPress = Console.ReadKey(true);
                         break;
 
                     case ConsoleKey.DownArrow:
-                        if (keyPressCount < menuToPrint.Count() - 1)
+                        if (verticalPressCount < listToPrint.Count() - 1)
                         {
-                            keyPressCount++;
+                            verticalPressCount++;
                         }
                         Console.Clear();
-                        PrintMenu(menuToPrint, keyPressCount);
+                        PrintMenu(listToPrint, verticalPressCount);
+                        keyPress = Console.ReadKey(true);
+                        break;
+
+                    case ConsoleKey.LeftArrow:
+                        if (horizontalPressCount > 0)
+                        {
+                            horizontalPressCount--;
+                        }
+                        listToPrint = taskLists[horizontalPressCount];
+                        Console.Clear();
+                        verticalPressCount = 0;
+                        PrintMenu(listToPrint, verticalPressCount);
+                        keyPress = Console.ReadKey(true);
+                        break;
+
+                     case ConsoleKey.RightArrow:
+                        if (horizontalPressCount < taskLists.Count - 1)
+                        {
+                            horizontalPressCount++;
+                        }
+                        listToPrint = taskLists[horizontalPressCount];
+                        Console.Clear();
+                        verticalPressCount = 0;
+                        PrintMenu(listToPrint, verticalPressCount);
                         keyPress = Console.ReadKey(true);
                         break;
                 }
             }
 
-            Console.Clear();
-            return keyPressCount;
+            return new int[] { horizontalPressCount, verticalPressCount };
         }
 
 

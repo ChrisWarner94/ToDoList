@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -55,8 +56,8 @@ namespace ToDoList
                 List<List<Task>> completedTasks = SqliteDataAccess.LoadCompletedTasks();
                 CheckListIsPopulated(completedTasks, "completed");
                 List<List<string>> textBodies = ReturnTaskTextBody(completedTasks);
-                int presscount = UserInterface.ReturnMenuSelection(textBodies);
-                Task task = completedTasks[presscount][1];// needs to be setup to receive horizontal presscount
+                int[] presscount = UserInterface.ReturnTaskSelection(textBodies);
+                Task task = completedTasks[presscount[0]][presscount[1]];// needs to be setup to receive horizontal presscount
                 MenuRoutes(task);
 
             }
@@ -65,8 +66,9 @@ namespace ToDoList
                 List<List<Task>> incompleteTasks = SqliteDataAccess.LoadIncompleteTasks();
                 CheckListIsPopulated(incompleteTasks, "incomplete");
                 List<List<string>> textBodies = ReturnTaskTextBody(incompleteTasks);
-                int presscount = UserInterface.ReturnMenuSelection(textBodies);
-                Task task = incompleteTasks[presscount][1];// needs to be setup to receive horizontal presscount
+                int[] presscount = UserInterface.ReturnTaskSelection(textBodies);
+                Console.WriteLine(incompleteTasks[presscount[0]][presscount[1]]);
+                Task task = incompleteTasks[presscount[0]][presscount[1]];// needs to be setup to receive horizontal presscount
                 Console.WriteLine(textBodies.Count);
                 MenuRoutes(task);
 
