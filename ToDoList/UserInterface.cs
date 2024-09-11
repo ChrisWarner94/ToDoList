@@ -142,7 +142,17 @@
 
         }
 
-    
+        public static void AddTask()
+        {
+            string taskToAdd = GetText("Enter the task you would like to add:");
+            Task newTask = new Task(taskToAdd, false);
+            SqliteDataAccess.SaveTask(newTask);
+            Console.Clear();
+            PrintNotification($"Task Added: {newTask.TextBody}");
+            Thread.Sleep(1000);
+            Console.Clear();
+            InterfaceRouting.MenuRoutes("MainMenu");
+        }
 
         public static void PrintNotification(string notification)
         {
