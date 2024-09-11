@@ -14,7 +14,7 @@
                 
                 if (presscount == 0)
                 {
-                    UserInterface.AddTask();
+                    Task.AddTask();
                 }
                 else if (presscount == 1)
                 {
