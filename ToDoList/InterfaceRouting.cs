@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ToDoList
+﻿namespace ToDoList
 {
     internal class InterfaceRouting
     {
@@ -57,7 +49,7 @@ namespace ToDoList
                 CheckListIsPopulated(completedTasks, "completed");
                 List<List<string>> textBodies = ReturnTaskTextBody(completedTasks);
                 int[] presscount = UserInterface.ReturnTaskSelection(textBodies);
-                Task task = completedTasks[presscount[0]][presscount[1]];// needs to be setup to receive horizontal presscount
+                Task task = completedTasks[presscount[0]][presscount[1]];
                 MenuRoutes(task);
 
             }
@@ -67,9 +59,7 @@ namespace ToDoList
                 CheckListIsPopulated(incompleteTasks, "incomplete");
                 List<List<string>> textBodies = ReturnTaskTextBody(incompleteTasks);
                 int[] presscount = UserInterface.ReturnTaskSelection(textBodies);
-                Console.WriteLine(incompleteTasks[presscount[0]][presscount[1]]);
-                Task task = incompleteTasks[presscount[0]][presscount[1]];// needs to be setup to receive horizontal presscount
-                Console.WriteLine(textBodies.Count);
+                Task task = incompleteTasks[presscount[0]][presscount[1]];
                 MenuRoutes(task);
 
             }

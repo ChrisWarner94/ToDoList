@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Configuration;
+﻿using System.Configuration;
 using System.Data;
 using System.Data.SQLite;
 using Dapper;
-using System.Reflection.Metadata.Ecma335;
 
 namespace ToDoList
 {
@@ -42,7 +36,7 @@ namespace ToDoList
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
             {
-                cnn.Execute("insert into Task (TextBody,IsCompleted, CreateDate, CompletedDate) values (@TextBody,@IsCompleted, @CreateDate, @CompletedDate)", task);
+                cnn.Execute("insert into Task (TextBody,IsCompleted) values (@TextBody,@IsCompleted)", task);
             }
         }
 
@@ -50,8 +44,8 @@ namespace ToDoList
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
             {
-                cnn.Execute("update Task set TextBody = @TextBody, IsCompleted = @IsCompleted, CreateDate = @CreateDate, CompletedDate = @CompletedDate where Id = @Id",
-                    new { Id = task.id, TextBody = task.TextBody, IsCompleted = task.IsCompleted, CreateDate = task.CreateDate, CompletedDate = task.CompletedDate });
+                cnn.Execute("update Task set TextBody = @TextBody, IsCompleted = @IsCompleted where Id = @Id",
+                    new { Id = task.id, TextBody = task.TextBody, IsCompleted = task.IsCompleted});
             }
         }
 

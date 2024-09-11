@@ -1,45 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Linq;
-using System.Text;
-using static System.Net.Mime.MediaTypeNames;
-
-namespace ToDoList
+﻿namespace ToDoList
 {
     internal class UserInterface
     {
-        
+
         public static int ReturnMenuSelection<T>(IEnumerable<T> menuToPrint)
         {
-           
+
             int verticalPressCount = 0;
-            PrintMenu(menuToPrint, verticalPressCount); 
+            PrintMenu(menuToPrint, verticalPressCount);
             ConsoleKeyInfo keyPress = Console.ReadKey();
             while (keyPress.Key != ConsoleKey.Enter)
             {
-                    switch (keyPress.Key)
-                    {
-                        case ConsoleKey.UpArrow:
-                            if (verticalPressCount > 0)
-                            {
-                                verticalPressCount--;
-                            }
-                            Console.Clear();
-                            PrintMenu(menuToPrint, verticalPressCount);
-                            keyPress = Console.ReadKey(true);
-                            break;
+                switch (keyPress.Key)
+                {
+                    case ConsoleKey.UpArrow:
+                        if (verticalPressCount > 0)
+                        {
+                            verticalPressCount--;
+                        }
+                        Console.Clear();
+                        PrintMenu(menuToPrint, verticalPressCount);
+                        keyPress = Console.ReadKey(true);
+                        break;
 
-                        case ConsoleKey.DownArrow:
-                            if (verticalPressCount < menuToPrint.Count() - 1)
-                            {
-                                verticalPressCount++;
-                            }
-                            Console.Clear();
-                            PrintMenu(menuToPrint, verticalPressCount);
-                            keyPress = Console.ReadKey(true);
-                            break;
-                    }
+                    case ConsoleKey.DownArrow:
+                        if (verticalPressCount < menuToPrint.Count() - 1)
+                        {
+                            verticalPressCount++;
+                        }
+                        Console.Clear();
+                        PrintMenu(menuToPrint, verticalPressCount);
+                        keyPress = Console.ReadKey(true);
+                        break;
+                }
             }
 
             Console.Clear();
@@ -50,8 +43,10 @@ namespace ToDoList
         {
             int verticalPressCount = 0;
             int horizontalPressCount = 0;
+            int pageNumber = horizontalPressCount + 1;
 
             List<string> listToPrint = taskLists[horizontalPressCount];
+            PrintNotification($"Page {pageNumber} of {taskLists.Count}");
             PrintMenu(listToPrint, verticalPressCount);
 
 
@@ -66,6 +61,7 @@ namespace ToDoList
                             verticalPressCount--;
                         }
                         Console.Clear();
+                        PrintNotification($"Page {pageNumber} of {taskLists.Count}");
                         PrintMenu(listToPrint, verticalPressCount);
                         keyPress = Console.ReadKey(true);
                         break;
@@ -76,6 +72,7 @@ namespace ToDoList
                             verticalPressCount++;
                         }
                         Console.Clear();
+                        PrintNotification($"Page {pageNumber} of {taskLists.Count}");
                         PrintMenu(listToPrint, verticalPressCount);
                         keyPress = Console.ReadKey(true);
                         break;
@@ -84,28 +81,35 @@ namespace ToDoList
                         if (horizontalPressCount > 0)
                         {
                             horizontalPressCount--;
+                            pageNumber--;
                         }
                         listToPrint = taskLists[horizontalPressCount];
                         Console.Clear();
                         verticalPressCount = 0;
+                        PrintNotification($"Page {pageNumber} of {taskLists.Count}");
                         PrintMenu(listToPrint, verticalPressCount);
+
                         keyPress = Console.ReadKey(true);
                         break;
 
-                     case ConsoleKey.RightArrow:
+                    case ConsoleKey.RightArrow:
                         if (horizontalPressCount < taskLists.Count - 1)
                         {
                             horizontalPressCount++;
+                            pageNumber++;
                         }
                         listToPrint = taskLists[horizontalPressCount];
                         Console.Clear();
                         verticalPressCount = 0;
+                        PrintNotification($"Page {pageNumber} of {taskLists.Count}");
                         PrintMenu(listToPrint, verticalPressCount);
+
                         keyPress = Console.ReadKey(true);
                         break;
                 }
             }
 
+            Console.Clear();
             return new int[] { horizontalPressCount, verticalPressCount };
         }
 
@@ -134,14 +138,14 @@ namespace ToDoList
                 Console.ResetColor();
             }
 
-          
+
 
         }
 
         public static void AddTask()
         {
             string taskToAdd = GetText("Enter the task you would like to add:");
-            Task newTask = new Task(taskToAdd, false, DateTime.Now, null);
+            Task newTask = new Task(taskToAdd, false);
             SqliteDataAccess.SaveTask(newTask);
             Console.Clear();
             PrintNotification($"Task Added: {newTask.TextBody}");
@@ -177,5 +181,5 @@ namespace ToDoList
         }
     }
 
-  
+
 }
