@@ -32,6 +32,12 @@
                         PrintMenu(menuToPrint, verticalPressCount);
                         keyPress = Console.ReadKey(true);
                         break;
+
+
+                    case ConsoleKey.Backspace:
+                        Console.Clear();
+                        InterfaceRouting.MenuRoutes("MainMenu");
+                        break;
                 }
             }
 
@@ -106,6 +112,11 @@
 
                         keyPress = Console.ReadKey(true);
                         break;
+                    
+                     case ConsoleKey.Backspace:
+                        Console.Clear();
+                        InterfaceRouting.MenuRoutes("MainMenu");
+                        break;
                 }
             }
 
@@ -118,6 +129,7 @@
         {
             // Converts the IEnumerable<T> to a list to allow for indexing
             var menuList = menuToPrint.ToList();
+           
 
             for (int i = 0; i < menuList.Count; i++)
             {
@@ -138,8 +150,7 @@
                 Console.ResetColor();
             }
 
-
-
+            PrintNavigationInstructions();
         }
 
         public static void PrintNotification(string notification)
@@ -162,12 +173,17 @@
             string toReturn = Console.ReadLine();
             if (String.IsNullOrEmpty(toReturn))
             {
-                CentreText("Please enter a valid task.");
+                CentreText("Please enter a valid value.");
                 GetText(prompt);
             }
+            Console.Clear();
             return toReturn;
         }
+
+        private static void PrintNavigationInstructions()
+        {
+            Console.WriteLine();
+            PrintNotification("Navigate: Arrow keys - Confirm: Enter - Return to Main Menu: Backspace");
+        }
     }
-
-
 }

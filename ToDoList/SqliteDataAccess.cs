@@ -58,6 +58,16 @@ namespace ToDoList
             }
         }
 
+        public static List<List<Task>> ReturnTaskSearch(string search)
+        {
+            using (IDbConnection cnn = new SQLiteConnection(LoadConnectionString()))
+            {
+                var output = cnn.Query<Task>($"select * from Task where TextBody like '%{search}%'", new DynamicParameters());
+                List<List<Task>> searchResults = SplitList(output.ToList());
+                return searchResults;
+            }
+        }
+
         private static List<List<Task>> SplitList(List<Task> tasks)
         {
             int size = 10;
