@@ -202,6 +202,11 @@
                 CentreText("Please enter a valid value.");
                 GetText(prompt);
             }
+            else if (toReturn.Length > 90)
+            {
+                CentreText("Please enter a value less than 100 characters.");
+                GetText(prompt);
+            }
             Console.Clear();
             return toReturn;
         }
