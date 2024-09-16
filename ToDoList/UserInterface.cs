@@ -38,6 +38,10 @@
                         Console.Clear();
                         InterfaceRouting.MenuRoutes("MainMenu");
                         break;
+
+                    default:
+                        keyPress = Console.ReadKey(true);
+                        break;
                 }
             }
 
@@ -117,6 +121,10 @@
                         Console.Clear();
                         InterfaceRouting.MenuRoutes("MainMenu");
                         break;
+
+                    default:
+                        keyPress = Console.ReadKey(true);
+                        break;
                 }
             }
 
@@ -162,14 +170,32 @@
         }
         private static void CentreText(string text)
         {
-            int topBuffer = 1;
-            Console.SetCursorPosition((Console.WindowWidth - text.Length) / 2, Console.CursorTop + topBuffer);
-            Console.WriteLine(text);
+            // stops an error being thrown if the text is longer than the console width
+            if (text.Length > Console.WindowWidth)
+            {
+                Console.WriteLine(text);
+            }
+            else
+            {
+                int topBuffer = 1;
+                Console.SetCursorPosition((Console.WindowWidth - text.Length) / 2, Console.CursorTop + topBuffer);
+                Console.WriteLine(text);
+            }
+
+       
+        }
+
+        private static void LeftIndentCursor()
+        {
+            int consoleWidth = Console.WindowWidth;
+            int leftIndent = consoleWidth / 8;
+            Console.SetCursorPosition(leftIndent, 2);
         }
 
         public static string GetText(string prompt)
         {
             PrintNotification(prompt);
+            LeftIndentCursor();
             string toReturn = Console.ReadLine();
             if (String.IsNullOrEmpty(toReturn))
             {
@@ -183,6 +209,7 @@
         private static void PrintNavigationInstructions()
         {
             Console.WriteLine();
+            PrintNotification("-------------------------------------------------------------------------------------------------------");
             PrintNotification("Navigate: Arrow keys - Confirm: Enter - Return to Main Menu: Backspace");
         }
     }
