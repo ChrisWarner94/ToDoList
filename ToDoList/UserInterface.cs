@@ -204,7 +204,7 @@
             }
             else if (toReturn.Length > 90)
             {
-                CentreText("Please enter a value less than 100 characters.");
+                CentreText("Please enter a value less than 90 characters.");
                 GetText(prompt);
             }
             Console.Clear();
